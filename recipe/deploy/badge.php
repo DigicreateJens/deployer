@@ -10,7 +10,7 @@ set('latestTag', function() {
     return $latestTag;
 });
 
-before('deploy', function() {
+before('deploy:prepare', function() {
     if(!has('apiKey')) {
         writeln('<fg=red>No Gitlab `apiKey` set, no badge will be added.</fg=red>');
     }
