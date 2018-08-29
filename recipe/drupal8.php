@@ -41,3 +41,5 @@ set('shared_files', [
 set('writable_dirs', [
     'sites/{{drupal_site}}/files',
 ]);
+
+after('deploy', 'success');

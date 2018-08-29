@@ -89,3 +89,5 @@ task('drupal:upload_files', function () {
         upload('sites/{{drupal_site}}/files', '{{deploy_path}}/shared/sites/{{drupal_site}}/files');
     }
 });
+
+after('deploy', 'success');
