@@ -17,7 +17,7 @@ task('check:apiKey', function() {
     }
 });
 
-after('success', 'git:badge');
+after('cleanup', 'git:badge');
 task('git:badge', function () {
         $hostname = get('hostname');
         set('anchor', str_replace('.', '', get('latestTag')));
