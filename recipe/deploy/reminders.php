@@ -34,20 +34,42 @@ task('reminders:show', function () {
     $remindersByTag = get('remindersByTag');
     $tag = ask('Which tag should be used?', get('latestTag'));
     if($tag === 'all') {
-
-    }
-    // Loop over the reminders of the latest tag.
-    if (isset($remindersByTag[$tag])) {
-        writeln('<info>Don\'t forget:</info>');
-        foreach ($remindersByTag as $tag => $reminders) {
-            writeln("<info>Tag: {$tag}</info>");
-            foreach ($reminders as $i => $reminder) {
-                // Show all reminders for the given tag
-                writeln("<info>    - {$reminder}</info>");
-            }
-        }
+        showAllReminders($remindersByTag);
     } else {
-        writeln("<info>No reminders set for {$tag}</info>");
+        showRemindersByTag($remindersByTag, $tag);
     }
+
 })->local()
   ->once();
+
+// Functions
+function showReminders($remindersByTag) {
+    writeln('<info>Don\'t forget:</info>');
+    foreach ($remindersByTag as $tag => $reminders) {
+        writeln("<info>Tag: {$tag}</info>");
+        foreach ($reminders as $i => $reminder) {
+            // Show all reminders for the given tag
+            writeln("<info>    - {$reminder}</info>");
+        }
+    }
+
+    return true;
+}
+
+function showAllReminders($remindersByTag) {
+    writeln('<info>Don\'t forget:</info>');
+    showReminders($remindersByTag);
+
+    return true;
+}
+
+function showRemindersByTag($remindersByTag, $selectedTag) {
+    // Loop over the reminders of the latest tag.
+    if (isset($remindersByTag[$selectedTag])) {
+        showReminders($remindersByTag[$selectedTag]);
+    } else {
+        writeln("<info>No reminders set for {$selectedTag}</info>");
+    }
+
+    return true;
+}
