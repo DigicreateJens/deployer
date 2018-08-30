@@ -54,6 +54,7 @@ function showReminders($remindersByTag)
             // Show all reminders for the given tag
             writeln("<fg=magenta;options=bold>    |- {$reminder}</>");
         }
+        writeln('');
     }
 
     return true;
