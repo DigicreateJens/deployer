@@ -6,7 +6,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 set('remindersByTag', function () {
     $file = @file_get_contents('.dep_reminders');
-    if(!$file) {
+    if (!$file) {
         touch('.dep_reminders');
     }
 
@@ -26,14 +26,14 @@ task('reminders:add', function () {
         writeln("<info>Ok, I'll remind you of '{$reminder}' the next time you deploy tag '{$tag}'");
     }
 })->local()
-    ->once();
+  ->once();
 
 desc('Show the set reminders when deploying.');
 task('reminders:show', function () {
     // Load the .dep_reminders file.
     $remindersByTag = get('remindersByTag');
     $tag = ask('Which tag should be used?', get('latestTag'));
-    if($tag === 'all') {
+    if ($tag === 'all') {
         showAllReminders($remindersByTag);
     } else {
         showRemindersByTag($remindersByTag, $tag);
@@ -43,29 +43,34 @@ task('reminders:show', function () {
   ->once();
 
 // Functions
-function showReminders($remindersByTag) {
-    writeln('<info>Don\'t forget:</info>');
+function showReminders($remindersByTag)
+{
+    writeln('<fg=green;options=bold>Don\'t forget:</>');
+    writeln('<fg=green;options=bold>============</>');
     foreach ($remindersByTag as $tag => $reminders) {
-        writeln("<info>Tag: {$tag}</info>");
+        writeln("<fg=magenta;options=bold>{$tag}</>");
+        writeln('<fg=magenta;options=bold>------------</>');
         foreach ($reminders as $i => $reminder) {
             // Show all reminders for the given tag
-            writeln("<info>    - {$reminder}</info>");
+            writeln("<fg=magenta;options=bold>    |- {$reminder}</>");
         }
     }
 
     return true;
 }
 
-function showAllReminders($remindersByTag) {
+function showAllReminders($remindersByTag)
+{
     showReminders($remindersByTag);
 
     return true;
 }
 
-function showRemindersByTag($remindersByTag, $selectedTag) {
+function showRemindersByTag($remindersByTag, $selectedTag)
+{
     // Loop over the reminders of the latest tag.
     if (isset($remindersByTag[$selectedTag])) {
-        showReminders($remindersByTag[$selectedTag]);
+        showReminders([$selectedTag => $remindersByTag[$selectedTag]]);
     } else {
         writeln("<info>No reminders set for {$selectedTag}</info>");
     }
