@@ -2,8 +2,6 @@
 
 namespace Deployer;
 
-desc('Add a badge to your repository');
-
 set('latestTag', function() {
     $latestTag = runLocally('git describe --abbrev=0 --tags');
 
@@ -18,6 +16,7 @@ task('check:apiKey', function() {
 });
 
 after('cleanup', 'git:badge');
+desc('Add a badge to your repository');
 task('git:badge', function () {
         $hostname = get('hostname');
         set('anchor', str_replace('.', '', get('latestTag')));
