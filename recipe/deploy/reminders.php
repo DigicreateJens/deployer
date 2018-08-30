@@ -57,7 +57,6 @@ function showReminders($remindersByTag) {
 }
 
 function showAllReminders($remindersByTag) {
-    writeln('<info>Don\'t forget:</info>');
     showReminders($remindersByTag);
 
     return true;
