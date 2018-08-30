@@ -27,6 +27,7 @@ require __DIR__ . '/deploy/cleanup.php';
 require __DIR__ . '/deploy/copy_dirs.php';
 require __DIR__ . '/deploy/rollback.php';
 require __DIR__.'/deploy/badge.php';
+require __DIR__ . '/deploy/reminders.php';
 
 /**
  * Facts
