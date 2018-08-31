@@ -18,10 +18,12 @@ task('reminders:add', function () {
     $reminder = ask('What should I remind you of?', null);
     if ($reminder) {
         $tag = ask('Which tag should be used?', get('latestTag'));
+        $tagArray  = explode('.', $tag);
+        list($major, $minor, $patch) = $tagArray;
         // Load the .dep_reminders file
         $remindersByTag = get('remindersByTag');
         // Add the reminder to the file, under the tag
-        $remindersByTag[$tag][] = $reminder;
+        $remindersByTag[$major][$minor][$patch][] = $reminder;
         file_put_contents('.dep_reminders', json_encode($remindersByTag));
         writeln("<info>Ok, I'll remind you of '{$reminder}' the next time you deploy tag '{$tag}'");
     }
