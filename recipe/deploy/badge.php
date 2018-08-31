@@ -22,7 +22,7 @@ task('git:badge', function () {
         set('anchor', str_replace('.', '', get('latestTag')));
         if(has($hostname . '_badge_id')) {
             set('badge_id', get($hostname . '_badge_id'));
-            set('color', has('production_badge_id') ? get($hostname . '_badge_id') : 'brightgreen');
+            set('color', has('production_badge_color') ? get($hostname . '_badge_color') : 'brightgreen');
             runLocally('curl --request PUT -H "PRIVATE-TOKEN: {{apiKey}}" -F "link_url=https://gitlab.com/%{project_path}#version-{{anchor}}" -F "image_url=https://img.shields.io/badge/{{hostname}}-v{{latestTag}}-{{color}}.svg" https://gitlab.com/api/v4/projects/{{project_id}}/badges/{{badge_id}}');
             writeln('<info>Badge added</info>');
         } else {
