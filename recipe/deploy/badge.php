@@ -3,9 +3,7 @@
 namespace Deployer;
 
 set('latestTag', function () {
-    $latestTag = runLocally('git describe --abbrev=0 --tags');
-
-    return $latestTag;
+    return runLocally('git describe --abbrev=0 --tags');
 });
 
 before('deploy:prepare', 'check:apiKey');
@@ -19,9 +17,9 @@ after('cleanup', 'git:badge');
 desc('Add a badge to your repository');
 task('git:badge', function () {
     $hostname = get('hostname');
-    set('anchor', str_replace('.', '', get('latestTag')));
     $badge_id = $hostname.'_badge_id';
     if (isset(Deployer::get()->config[$badge_id])) {
+        set('anchor', str_replace('.', '', get('latestTag')));
         set('badge_id', get($badge_id));
         $badge_color = $hostname.'_badge_color';
         set('color', isset(Deployer::get()->config[$badge_color]) ? get($badge_color) : 'brightgreen');
