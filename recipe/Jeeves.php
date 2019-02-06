@@ -126,3 +126,5 @@ before('deploy:failed', 'deploy:unlock');
 
 // Migrate database before symlink new release.
 before('deploy:symlink', 'artisan:migrate');
+
+after('git:badge', 'label_milestone_issues');

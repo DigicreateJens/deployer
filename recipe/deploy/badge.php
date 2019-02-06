@@ -3,7 +3,11 @@
 namespace Deployer;
 
 set('latestTag', function () {
-    return runLocally('git describe --abbrev=0 --tags');
+    try {
+        return runLocally('git describe --abbrev=0 --tags');
+    } catch (\Throwable $e) {
+        writeln('<error>Geen tags gevonden, vergeten taggen?</error>');
+    }
 });
 
 before('deploy:prepare', 'check:apiKey');
