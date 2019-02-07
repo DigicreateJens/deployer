@@ -14,7 +14,15 @@ require_once __DIR__.'/laravel.php';
  */
 set('git_tty', false);
 set('bin/php', '/opt/plesk/php/7.2/bin/php');
-set('bin/composer', '/usr/lib64/plesk-9.0/composer.phar');
+set('bin/composer', function() {
+    $options = '';
+
+    if(get('hostname') === 'production') {
+        $options = ' --no-dev ';
+    }
+
+    return '/usr/lib64/plesk-9.0/composer.phar' . $options;
+});
 set('bin/nvm', '. "/usr/local/opt/nvm/nvm.sh"');
 
 /**
@@ -118,7 +126,7 @@ task('deploy:vendors', function () {
         run('composer global require wikimedia/composer-merge-plugin');
         run('rm {{release_path}}/composer.lock');
         run('cp {{release_path}}/_composer.live.json {{release_path}}/composer.live.json');
-        run('cd {{release_path}} && {{bin/php}} {{bin/composer}} install -vvv --no-dev --no-interaction');
+        run('cd {{release_path}} && {{bin/php}} {{bin/composer}} install --no-interaction');
     }
 });
 
