@@ -44,6 +44,7 @@ set('shared_dirs', [
 // JEeves shared file
 set('shared_files', [
     '.env',
+    'auth.json',
 ]);
 
 // Jeeves writable dirs
