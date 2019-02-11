@@ -15,7 +15,6 @@ set('GitlabClient', function () {
     } catch (\Throwable $e) {
         writeln('<error>Kon geen verbinding maken met Gitlab. Is je \'apiKey\' ingesteld?</error>');
     }
-
 });
 
 /**
@@ -29,40 +28,43 @@ task('label_milestone_issues', function () {
         $latestTag = "{$semantics[1]}.{$semantics[2]}";
     }
     $Gitlab = get('GitlabClient');
-    $projectId = get('project_id');
 
-    // Check if a Milestone exists
-    $milestone = $Gitlab->api('milestones')->all($projectId, [
-        'search' => $latestTag,
-    ]);
-    if (empty($milestone)) {
-        writeln("No Milestone names {$latestTag} found. Aborting.");
-    } else {
-        $issues = $Gitlab->api('issues')->all($projectId,
-            [
-                'scope' => 'all',
-                'milestone' => $latestTag,
-                'per_page' => 100,
-                'labels' => '06 staat klaar',
-            ]);
+    if($Gitlab) {
+        $projectId = get('project_id');
 
-        // Loop over and update issues with new Labels
-        if (empty($issues)) {
-            writeln("No issues for Milestone {$latestTag}.");
+        // Check if a Milestone exists
+        $milestone = $Gitlab->api('milestones')->all($projectId, [
+            'search' => $latestTag,
+        ]);
+        if (empty($milestone)) {
+            writeln("No Milestone names {$latestTag} found. Aborting.");
         } else {
-            $env = get('hostname');
-            foreach ($issues as $i => $issue) {
-                $labels = array_merge($issue['labels'], ["Deployed {$env}"]);
+            $issues = $Gitlab->api('issues')->all($projectId,
+                [
+                    'scope' => 'all',
+                    'milestone' => $latestTag,
+                    'per_page' => 100,
+                    'labels' => '06 staat klaar',
+                ]);
 
-                $Gitlab->api('issues')->update(
-                    $projectId,
-                    $issue['iid'],
-                    [
-                        'labels' => implode(',', $labels),
-                    ]
-                );
+            // Loop over and update issues with new Labels
+            if (empty($issues)) {
+                writeln("No issues for Milestone {$latestTag}.");
+            } else {
+                $env = get('hostname');
+                foreach ($issues as $i => $issue) {
+                    $labels = array_merge($issue['labels'], ["Deployed {$env}"]);
 
-                writeln("Added badge to {$issue['title']} - {$issue['web_url']}");
+                    $Gitlab->api('issues')->update(
+                        $projectId,
+                        $issue['iid'],
+                        [
+                            'labels' => implode(',', $labels),
+                        ]
+                    );
+
+                    writeln("Added badge to {$issue['title']} - {$issue['web_url']}");
+                }
             }
         }
     }
