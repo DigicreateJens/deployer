@@ -14,14 +14,14 @@ require_once __DIR__.'/laravel.php';
  */
 set('git_tty', false);
 set('bin/php', '/opt/plesk/php/7.2/bin/php');
-set('bin/composer', function() {
+set('bin/composer', function () {
     $options = '';
 
-    if(get('hostname') === 'production') {
+    if (get('hostname') === 'production') {
         $options = ' --no-dev ';
     }
 
-    return '/usr/lib64/plesk-9.0/composer.phar' . $options;
+    return '/usr/lib64/plesk-9.0/composer.phar'.$options;
 });
 set('bin/nvm', '. "/usr/local/opt/nvm/nvm.sh"');
 
@@ -41,6 +41,8 @@ option(
 set('CI', function () {
     return input()->getOption('CI');
 });
+
+set('legacy_project', false);
 
 
 // Jeeves shared dirs
@@ -117,16 +119,26 @@ task('jeeves:git', function () {
 task('deploy:vendors', function () {
     if (get('CI')) {
         upload('vendor', '{{release_path}}/vendor');
-        upload('public/css/', '{{release_path}}/public/css/', []);
-        upload('public/app/', '{{release_path}}/public/app/', []);
-        upload('public/jeeves/', '{{release_path}}/public/jeeves/', []);
-        upload('public/mix-manifest.json', '{{release_path}}/public/mix-manifest.json', []);
     } else {
         // Merge JSONs and run Composer
         run('composer global require wikimedia/composer-merge-plugin');
         run('rm {{release_path}}/composer.lock');
         run('cp {{release_path}}/_composer.live.json {{release_path}}/composer.live.json');
         run('cd {{release_path}} && {{bin/php}} {{bin/composer}} install --no-interaction');
+    }
+});
+
+/**
+ * Upload assets if they are ignored AND this is not flagged as a legacy project.
+ */
+after('deploy:vendors', 'upload:assets');
+task('upload:assets', function () {
+    $ignored = strpos(file_get_contents('.gitignore'), 'public/js/jeeves.js') !== false;
+    if ($ignored && !get('legacy_project')) {
+        upload('public/css/', '{{release_path}}/public/css/', []);
+        upload('public/app/', '{{release_path}}/public/app/', []);
+        upload('public/jeeves/', '{{release_path}}/public/jeeves/', []);
+        upload('public/mix-manifest.json', '{{release_path}}/public/mix-manifest.json', []);
     }
 });
 
