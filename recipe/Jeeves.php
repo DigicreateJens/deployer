@@ -133,12 +133,10 @@ task('deploy:vendors', function () {
  */
 after('deploy:vendors', 'upload:assets');
 task('upload:assets', function () {
-    $ignored = strpos(file_get_contents('.gitignore'), 'public/js/jeeves.js') !== false;
+    $ignored = strpos(file_get_contents('.gitignore'), 'public/jeeves') !== false;
     if ($ignored && !get('legacy_project')) {
-        upload('public/css/', '{{release_path}}/public/css/', []);
         upload('public/app/', '{{release_path}}/public/app/', []);
         upload('public/jeeves/', '{{release_path}}/public/jeeves/', []);
-        upload('public/mix-manifest.json', '{{release_path}}/public/mix-manifest.json', []);
     }
 });
 
