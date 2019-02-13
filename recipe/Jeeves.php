@@ -118,7 +118,7 @@ task('jeeves:git', function () {
 // When deploying from CI, upload assets manually
 task('deploy:vendors', function () {
     if (get('CI')) {
-        upload('vendor', '{{release_path}}/vendor');
+        upload('vendor', '{{release_path}}');
     } else {
         // Merge JSONs and run Composer
         run('composer global require wikimedia/composer-merge-plugin');
