@@ -14,8 +14,9 @@ require_once __DIR__.'/laravel.php';
  */
 set('git_tty', false);
 set('bin/php', '/opt/plesk/php/7.2/bin/php');
+
 set('bin/composer', function () {
-    $options = '';
+    $options = ' ';
 
     if (get('hostname') === 'production') {
         $options = ' --no-dev ';
@@ -72,11 +73,21 @@ set('writable_dirs', [
 
 // When NOT in CI, build and push assets to GIT before starting deploy
 before('deploy:release', 'jeeves:build');
-task('jeeves:build', [
-    'jeeves:nvm',
-    'jeeves:yarn',
-    'jeeves:git',
-]);
+task('jeeves:build', function() {
+    if (!get('CI')) {
+        runLocally('dep jeeves:switch_branch {{hostname}}');
+        runLocally('dep jeeves:nvm {{hostname}}');
+        runLocally('dep jeeves:yarn {{hostname}}');
+        runLocally('dep jeeves:git {{hostname}}');
+    }
+});
+
+task('jeeves:switch_branch', function() {
+    if (!get('CI')) {
+        $branch = get('branch');
+        runLocally("git checkout {$branch}");
+    }
+});
 
 task('jeeves:nvm', function () {
     if (!get('CI')) {
@@ -124,7 +135,7 @@ task('deploy:vendors', function () {
         run('composer global require wikimedia/composer-merge-plugin');
         run('rm {{release_path}}/composer.lock');
         run('cp {{release_path}}/_composer.live.json {{release_path}}/composer.live.json');
-        run('cd {{release_path}} && {{bin/php}} {{bin/composer}} install --no-interaction');
+        run('cd {{release_path}} && {{bin/php}} -dmemory_limit=2G {{bin/composer}} install --no-interaction');
     }
 });
 
@@ -135,6 +146,7 @@ after('deploy:vendors', 'upload:assets');
 task('upload:assets', function () {
     $ignored = strpos(file_get_contents('.gitignore'), 'public/jeeves') !== false;
     if ($ignored && !get('legacy_project')) {
+        runLocally('dep jeeves:switch_branch {{hostname}} -vv');
         upload('public/app/', '{{release_path}}/public/app/', []);
         upload('public/jeeves/', '{{release_path}}/public/jeeves/', []);
     }
