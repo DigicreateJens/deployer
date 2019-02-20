@@ -134,8 +134,8 @@ task('deploy:vendors', function () {
         // Merge JSONs and run Composer
         run('composer global require wikimedia/composer-merge-plugin');
         run('rm {{release_path}}/composer.lock');
-        run('cp {{release_path}}/_composer.live.json {{release_path}}/composer.live.json');
-        run('cd {{release_path}} && {{bin/php}} -dmemory_limit=2G {{bin/composer}} install --no-interaction');
+        run('mv {{release_path}}/_composer.live.json {{release_path}}/composer.live.json');
+        run('cd {{release_path}} && {{bin/php}} {{bin/composer}} install --no-interaction');
     }
 });
 
