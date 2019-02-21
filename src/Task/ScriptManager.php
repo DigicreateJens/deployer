@@ -7,7 +7,10 @@
 
 namespace Deployer\Task;
 
+use function Deployer\argument;
+use function Deployer\get;
 use Deployer\Host\Host;
+use function Deployer\option;
 use function Deployer\Support\array_flatten;
 
 class ScriptManager

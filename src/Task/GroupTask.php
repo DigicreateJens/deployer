@@ -7,6 +7,8 @@
 
 namespace Deployer\Task;
 
+use Deployer\Collection\Collection;
+use Deployer\Deployer;
 use Deployer\Exception\Exception;
 
 class GroupTask extends Task
@@ -43,7 +45,23 @@ class GroupTask extends Task
      */
     public function getGroup()
     {
-        return $this->group;
+        $filteredGroup = $this->group;
+
+        $start = Deployer::get()
+                            ->getInput()
+                           ->getOption('start_at');
+
+        if($start && in_array($start, $filteredGroup, true)) {
+            foreach($this->group as $i => $task) {
+                if($task === $start) {
+                    break;
+                }
+
+                unset($filteredGroup[$i]);
+            }
+        }
+
+        return $filteredGroup;
     }
 
     public function local()

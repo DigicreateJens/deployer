@@ -93,6 +93,12 @@ class TaskCommand extends Command
             Option::VALUE_REQUIRED | Option::VALUE_IS_ARRAY,
             'Sets configuration option'
         );
+        $this->addOption(
+            'start_at',
+            'c',
+            Option::VALUE_OPTIONAL,
+            'Run group task, starting from given task'
+        );
     }
 
     /**
