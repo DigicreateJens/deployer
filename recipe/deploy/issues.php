@@ -42,6 +42,7 @@ task('label_milestone_issues', function () {
             $issues = $Gitlab->api('issues')->all($projectId,
                 [
                     'scope' => 'all',
+                    'state' => 'opened',
                     'milestone' => $latestTag,
                     'per_page' => 100,
                     'labels' => '06 staat klaar',
