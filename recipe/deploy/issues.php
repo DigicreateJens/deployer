@@ -20,6 +20,8 @@ set('GitlabClient', function () {
 /**
  * Close all issues under the 'major' milestone of the project.
  */
+
+after('git:badge', 'label_milestone_issues');
 task('label_milestone_issues', function () {
     $latestTag = get('latestTag');
     $semanticVersioningRegex = '/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/';
@@ -73,6 +75,7 @@ task('label_milestone_issues', function () {
 /**
  * Create a '-Checklist-' issue when deploying
  */
+after('label_milestone_issues', 'create_checklist_issue');
 task('create_checklist_issue', function () {
     $Gitlab = get('GitlabClient');
     $projectId = get('project_id');
