@@ -112,17 +112,3 @@
 ## Nazorg
 - [ ] Er werd een review aan de klant gevraagd voor Google en Facebook
 - [ ] Er werd een intern evaluatiegesprek gehouden
-
-## Jeeves ToDo's
-- [ ] Toevoegen 'checklist issue template'
-- [ ] Default 'author' Meta Tag
-- [ ] Default 'no index no follow' Meta Tag (!= prod)
-- [ ] Remove `User-scalable` override from default layout cfr. AnySurfer
-- [ ] Add `NOTIFICATION_MAIL` to generator
-- [ ] Console command om url's aan te passen van url X naar url Y
-
-## Magento ToDo's
-- [ ] Toevoegen 'checklist issue template'
-- [ ] Script om alle testbetalingen/-gegevens te verwijderen
-- [ ] Default 'author' Meta Tag
-- [ ] Default 'no index no follow' Meta Tag (!= prod)

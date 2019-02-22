@@ -30,9 +30,9 @@ task('label_milestone_issues', function () {
         $latestTag = "{$semantics[1]}.{$semantics[2]}";
     }
     $Gitlab = get('GitlabClient');
-    $projectId = get('project_id');
 
-    if ($Gitlab && $projectId) {
+    if ($Gitlab) {
+        $projectId = get('project_id');
         // Check if a Milestone exists
         $milestone = $Gitlab->api('milestones')->all($projectId, [
             'search' => $latestTag,
@@ -78,9 +78,9 @@ task('label_milestone_issues', function () {
 after('label_milestone_issues', 'create_checklist_issue');
 task('create_checklist_issue', function () {
     $Gitlab = get('GitlabClient');
-    $projectId = get('project_id');
 
-    if ($Gitlab && $projectId) {
+    if ($Gitlab) {
+        $projectId = get('project_id');
         $checklist = $Gitlab->api('issues')->all($projectId, [
             'scope' => 'all',
             'search' => '-Checklist-',
