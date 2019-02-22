@@ -28,10 +28,9 @@ task('label_milestone_issues', function () {
         $latestTag = "{$semantics[1]}.{$semantics[2]}";
     }
     $Gitlab = get('GitlabClient');
+    $projectId = get('project_id');
 
-    if($Gitlab) {
-        $projectId = get('project_id');
-
+    if ($Gitlab && $projectId) {
         // Check if a Milestone exists
         $milestone = $Gitlab->api('milestones')->all($projectId, [
             'search' => $latestTag,
@@ -67,6 +66,31 @@ task('label_milestone_issues', function () {
                     writeln("Added badge to {$issue['title']} - {$issue['web_url']}");
                 }
             }
+        }
+    }
+});
+
+/**
+ * Create a '-Checklist-' issue when deploying
+ */
+task('create_checklist_issue', function () {
+    $Gitlab = get('GitlabClient');
+    $projectId = get('project_id');
+
+    if ($Gitlab && $projectId) {
+        $checklist = $Gitlab->api('issues')->all($projectId, [
+            'scope' => 'all',
+            'search' => '-Checklist-',
+        ]);
+        $checklistExists = count($checklist) > 0;
+
+        if(!$checklistExists) {
+            $checklistTemplate = file_get_contents(__DIR__ . '/../../templates/checklist.md');
+            $Gitlab->api('issues')->create($projectId, [
+                'title' => '-Checklist-',
+                'labels' => '05 op planning,11 critical',
+                'description' => $checklistTemplate,
+            ]);
         }
     }
 });

@@ -152,10 +152,10 @@ task('upload:assets', function () {
     }
 });
 
-// [Optional] if deploy fails automatically unlock.
+// before
 before('deploy:failed', 'deploy:unlock');
-
-// Migrate database before symlink new release.
 before('deploy:symlink', 'artisan:migrate');
 
+// after
 after('git:badge', 'label_milestone_issues');
+after('label_milestone_issues', 'create_checklist_issue');
