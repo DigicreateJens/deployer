@@ -91,7 +91,7 @@ task('create_checklist_issue', function () {
             $checklistTemplate = file_get_contents(__DIR__ . '/../../templates/checklist.md');
             $Gitlab->api('issues')->create($projectId, [
                 'title' => '-Checklist-',
-                'labels' => '05 op planning,11 critical',
+                'labels' => '05 op planning,11 Critical',
                 'description' => $checklistTemplate,
             ]);
         }
