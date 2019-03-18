@@ -46,7 +46,7 @@ task('label_milestone_issues', function () {
                     'state' => 'opened',
                     'milestone' => $latestTag,
                     'per_page' => 100,
-                    'labels' => '06 staat klaar',
+                    'labels' => '06 staat lokaal klaar',
                 ]);
 
             // Loop over and update issues with new Labels
